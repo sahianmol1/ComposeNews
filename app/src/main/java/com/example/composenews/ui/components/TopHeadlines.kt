@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.composenews.R
 import com.example.composenews.data.local.TopNewsEntity
+import com.example.composenews.utils.ListType
 import com.example.composenews.viewmodels.TopNewsViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -29,7 +30,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun TopHeadlines(
     navController: NavController? = null,
     viewModel: TopNewsViewModel? = null,
-    isGridView: Boolean
+    listType: ListType
 ) {
     val articles: List<TopNewsEntity> = viewModel!!.news.observeAsState(listOf()).value
     val isLoading = viewModel.isLoading.observeAsState().value
@@ -55,25 +56,29 @@ fun TopHeadlines(
 
     val swipeRefreshState = rememberSwipeRefreshState(isLoading ?: false)
     SwipeRefresh(state = swipeRefreshState, onRefresh = { viewModel.getNews(true) }) {
-        if (isGridView) {
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 16.dp)
-            ) {
-                items(articles) { article ->
-                    NewsCard(article)
+
+        when(listType) {
+            ListType.LIST, ListType.STAGGERED -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp)
+                ) {
+                    items(articles) { article ->
+                        NewsCard(article)
+                    }
                 }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 16.dp)
-            ) {
-                items(articles) { article ->
-                    NewsCard(article)
+            ListType.GRID -> {
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp)
+                ) {
+                    items(articles) { article ->
+                        NewsCard(article)
+                    }
                 }
             }
         }
@@ -84,5 +89,5 @@ fun TopHeadlines(
 @Preview(showBackground = true)
 @Composable
 fun PreviewHeadlines() {
-    TopHeadlines(isGridView = false)
+    TopHeadlines(listType = ListType.LIST)
 }
