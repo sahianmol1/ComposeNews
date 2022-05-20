@@ -65,7 +65,7 @@ fun TopHeadlines(
                         .padding(bottom = 16.dp)
                 ) {
                     items(articles) { article ->
-                        NewsCard(article)
+                        NewsCard(article, listType)
                     }
                 }
             }
@@ -77,7 +77,7 @@ fun TopHeadlines(
                         .padding(bottom = 16.dp)
                 ) {
                     items(articles) { article ->
-                        NewsCard(article)
+                        NewsCard(article, listType)
                     }
                 }
             }
