@@ -97,10 +97,12 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-paging:$roomVersion")
 
     // Swipe Refresh
     implementation "com.google.accompanist:accompanist-swiperefresh:0.19.0"
 
-
+    // Paging 3
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
 }

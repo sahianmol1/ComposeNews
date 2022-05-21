@@ -1,22 +1,31 @@
 package com.example.composenews.repository
 
-import androidx.room.PrimaryKey
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.composenews.data.local.NewsDao
 import com.example.composenews.data.local.TopNewsEntity
+import com.example.composenews.data.local.remotemediator.PagingNewsDao
 import com.example.composenews.data.local.source.SourceDao
+import com.example.composenews.data.paging.NewsRemoteMediator
 import com.example.composenews.data.remote.api.NewsApi
 import com.example.composenews.data.remote.models.SourceItem
-import com.example.composenews.utils.DataType
+import com.example.composenews.utils.Constants.PAGE_SIZE
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 class NewsRepositoryImpl @Inject constructor(
     private val api: NewsApi,
     private val newsDao: NewsDao,
-    private val sourceDao: SourceDao
+    private val sourceDao: SourceDao,
+    private val pagingNewsDao: PagingNewsDao,
+    private val remoteMediator: NewsRemoteMediator,
 ) :
     NewsRepository {
 
@@ -94,4 +103,14 @@ class NewsRepositoryImpl @Inject constructor(
 
             return@withContext sourceDao.getAllSource() ?: emptyList()
         }
+
+    @ExperimentalPagingApi
+    override fun getEverything(query: String): Flow<PagingData<TopNewsEntity>> {
+        val pagingSourceFactory = { pagingNewsDao.getAllNews() }
+        return Pager(
+            config = PagingConfig(PAGE_SIZE),
+            remoteMediator = remoteMediator,
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
+    }
 }

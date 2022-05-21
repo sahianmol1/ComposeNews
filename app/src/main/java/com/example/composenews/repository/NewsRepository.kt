@@ -1,12 +1,15 @@
 package com.example.composenews.repository
 
+import androidx.paging.PagingData
 import com.example.composenews.data.local.TopNewsEntity
 import com.example.composenews.data.remote.models.SourceItem
-import com.example.composenews.utils.DataType
+import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
 
     suspend fun getNews(isRefresh: Boolean): List<TopNewsEntity>
 
     suspend fun getSources(isRefresh: Boolean): List<SourceItem>
+
+    fun getEverything(query: String): Flow<PagingData<TopNewsEntity>>
 }

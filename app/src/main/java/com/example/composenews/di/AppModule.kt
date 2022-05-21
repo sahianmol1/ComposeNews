@@ -1,9 +1,12 @@
 package com.example.composenews.di
 
 import android.app.Application
+import androidx.paging.ExperimentalPagingApi
 import androidx.room.Room
 import com.example.composenews.data.local.NewsDao
 import com.example.composenews.data.local.NewsDatabase
+import com.example.composenews.data.local.remotemediator.NewsKeyDao
+import com.example.composenews.data.local.remotemediator.PagingNewsDao
 import com.example.composenews.data.local.source.SourceDao
 import com.example.composenews.data.remote.api.NewsApi
 import com.example.composenews.repository.NewsRepository
@@ -20,6 +23,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+@ExperimentalPagingApi
 abstract class AppModule {
 
     companion object {
@@ -47,6 +51,15 @@ abstract class AppModule {
         @Provides
         @Singleton
         fun sourceDao(database: NewsDatabase): SourceDao = database.sourceDao()
+
+        @Provides
+        @Singleton
+        fun keysDap(database: NewsDatabase): NewsKeyDao = database.newsKeyDao()
+
+        @Provides
+        @Singleton
+        fun pagingNewsDao(database: NewsDatabase): PagingNewsDao = database.pagingNewsDao()
+
     }
 
     @Binds

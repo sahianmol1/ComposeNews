@@ -45,7 +45,7 @@ fun MainContent(context: Context, viewModel: TopNewsViewModel) {
                 }
 
                 composable(EVERYTHING) {
-                    Everything()
+                    Everything(viewModel, listType)
                 }
 
                 composable(SOURCES) {

@@ -10,7 +10,6 @@ import com.example.composenews.data.remote.models.SourceItem
 import com.example.composenews.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -33,6 +32,9 @@ class TopNewsViewModel @Inject constructor(private val repository: NewsRepositor
         triggerErrorEvent()
         _isLoading.postValue(false)
     }
+
+    fun getEverything(query: String) = repository.getEverything(query)
+
 
     fun getNews(isRefresh: Boolean) {
         viewModelScope.launch(exceptionHandler) {
