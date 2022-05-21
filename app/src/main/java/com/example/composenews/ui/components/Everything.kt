@@ -16,13 +16,14 @@ import androidx.paging.compose.items
 import com.example.composenews.data.local.remotemediator.PagingNewsEntity
 import com.example.composenews.ui.models.NewsUIModel
 import com.example.composenews.utils.ListType
+import com.example.composenews.utils.SortBy
 import com.example.composenews.viewmodels.TopNewsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Everything(viewModel: TopNewsViewModel, listType: ListType) {
+fun Everything(viewModel: TopNewsViewModel, listType: ListType, sortBy: SortBy) {
     val articles: LazyPagingItems<PagingNewsEntity> =
-        viewModel.getEverything("bitcoin").collectAsLazyPagingItems()
+        viewModel.getEverything("bitcoin", sortBy).collectAsLazyPagingItems()
 
     when (listType) {
         ListType.LIST, ListType.STAGGERED -> {

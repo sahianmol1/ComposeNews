@@ -20,6 +20,7 @@ import com.example.composenews.ui.components.bottomappbar.NavRoutes.EVERYTHING
 import com.example.composenews.ui.components.bottomappbar.NavRoutes.SOURCES
 import com.example.composenews.ui.components.bottomappbar.NavRoutes.TOP_HEADLINES
 import com.example.composenews.utils.ListType
+import com.example.composenews.utils.SortBy
 import com.example.composenews.viewmodels.TopNewsViewModel
 
 @Composable
@@ -27,11 +28,14 @@ fun MainContent(context: Context, viewModel: TopNewsViewModel) {
     val navController = rememberNavController()
 
     var listType by rememberSaveable { mutableStateOf(ListType.LIST) }
+    var sortBy by rememberSaveable { mutableStateOf(SortBy.popularity) }
 
     Scaffold(
         topBar = {
-            AppBar(navController = navController, context = context) {
+            AppBar(navController = navController, context = context, {
                 listType = it
+            }) {
+                sortBy = it
             }
         },
         bottomBar = {
@@ -45,7 +49,7 @@ fun MainContent(context: Context, viewModel: TopNewsViewModel) {
                 }
 
                 composable(EVERYTHING) {
-                    Everything(viewModel, listType)
+                    Everything(viewModel, listType, sortBy)
                 }
 
                 composable(SOURCES) {

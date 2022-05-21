@@ -4,6 +4,7 @@ import com.example.composenews.data.remote.models.SourceResponse
 import com.example.composenews.data.remote.models.TopHeadlinesResponse
 import com.example.composenews.utils.Constants.API_KEY
 import com.example.composenews.utils.Constants.PAGE_SIZE
+import com.example.composenews.utils.SortBy
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -26,6 +27,7 @@ interface NewsApi {
         @Query("apiKey") apiKey: String = API_KEY,
         @Query("q") query: String = "bitcoin",
         @Query("pageSize") pageSize: Int = PAGE_SIZE,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("sortBy") sortBy: String = SortBy.publishedAt.name
     ): Response<TopHeadlinesResponse>
 }

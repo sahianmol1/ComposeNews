@@ -12,14 +12,16 @@ import com.example.composenews.data.local.remotemediator.PagingNewsDao
 import com.example.composenews.data.local.remotemediator.PagingNewsEntity
 import com.example.composenews.data.remote.api.NewsApi
 import com.example.composenews.utils.Constants.PAGE_SIZE
-import javax.inject.Inject
+import com.example.composenews.utils.SortBy
 
 @ExperimentalPagingApi
-class NewsRemoteMediator @Inject constructor(
+class NewsRemoteMediator constructor(
     private val pagingNewsDao: PagingNewsDao,
     private val newsKeyDao: NewsKeyDao,
     private val db: NewsDatabase,
-    private val api: NewsApi
+    private val api: NewsApi,
+    private val query: String,
+    private val sortBy: SortBy,
 ) : RemoteMediator<Int, PagingNewsEntity>() {
 
     override suspend fun load(
@@ -51,7 +53,7 @@ class NewsRemoteMediator @Inject constructor(
                 }
             }
 
-            val response = api.getEverything(page = currentPage, pageSize = PAGE_SIZE)
+            val response = api.getEverything(page = currentPage, pageSize = PAGE_SIZE, query = query, sortBy = sortBy.name)
             val articles = response.body()?.articles
             val endOfPaginationReached = articles?.isEmpty() ?: true
 

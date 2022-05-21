@@ -5,7 +5,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.composenews.data.local.NewsDao
+import com.example.composenews.data.local.NewsDatabase
 import com.example.composenews.data.local.TopNewsEntity
+import com.example.composenews.data.local.remotemediator.NewsKeyDao
 import com.example.composenews.data.local.remotemediator.PagingNewsDao
 import com.example.composenews.data.local.remotemediator.PagingNewsEntity
 import com.example.composenews.data.local.source.SourceDao
@@ -13,6 +15,7 @@ import com.example.composenews.data.paging.NewsRemoteMediator
 import com.example.composenews.data.remote.api.NewsApi
 import com.example.composenews.data.remote.models.SourceItem
 import com.example.composenews.utils.Constants.PAGE_SIZE
+import com.example.composenews.utils.SortBy
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -26,7 +29,8 @@ class NewsRepositoryImpl @Inject constructor(
     private val newsDao: NewsDao,
     private val sourceDao: SourceDao,
     private val pagingNewsDao: PagingNewsDao,
-    private val remoteMediator: NewsRemoteMediator,
+    private val newsKeyDao: NewsKeyDao,
+    private val db: NewsDatabase,
 ) :
     NewsRepository {
 
@@ -106,11 +110,18 @@ class NewsRepositoryImpl @Inject constructor(
             return@withContext sourceDao.getAllSource() ?: emptyList()
         }
 
-    override fun getEverything(query: String): Flow<PagingData<PagingNewsEntity>> {
+    override fun getEverything(query: String, sortBy: SortBy): Flow<PagingData<PagingNewsEntity>> {
         val pagingSourceFactory = { pagingNewsDao.getAllNews() }
         return Pager(
             config = PagingConfig(PAGE_SIZE),
-            remoteMediator = remoteMediator,
+            remoteMediator = NewsRemoteMediator(
+                pagingNewsDao = pagingNewsDao,
+                newsKeyDao = newsKeyDao,
+                db = db,
+                api = api,
+                query = query,
+                sortBy = sortBy,
+            ),
             pagingSourceFactory = pagingSourceFactory
         ).flow
     }

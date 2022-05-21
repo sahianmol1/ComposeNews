@@ -10,3 +10,8 @@ enum class ListType {
     GRID,
     STAGGERED
 }
+
+enum class SortBy {
+    popularity,
+    publishedAt
+}

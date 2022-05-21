@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.composenews.data.local.TopNewsEntity
 import com.example.composenews.data.remote.models.SourceItem
 import com.example.composenews.repository.NewsRepository
+import com.example.composenews.utils.SortBy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -33,7 +34,7 @@ class TopNewsViewModel @Inject constructor(private val repository: NewsRepositor
         _isLoading.postValue(false)
     }
 
-    fun getEverything(query: String) = repository.getEverything(query)
+    fun getEverything(query: String, sortBy: SortBy) = repository.getEverything(query, sortBy)
 
     fun getNews(isRefresh: Boolean) {
         viewModelScope.launch(exceptionHandler) {
