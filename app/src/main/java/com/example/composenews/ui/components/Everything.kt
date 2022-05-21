@@ -13,14 +13,16 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.example.composenews.data.local.TopNewsEntity
+import com.example.composenews.data.local.remotemediator.PagingNewsEntity
+import com.example.composenews.ui.models.NewsUIModel
 import com.example.composenews.utils.ListType
 import com.example.composenews.viewmodels.TopNewsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Everything(viewModel: TopNewsViewModel, listType: ListType) {
-    val articles : LazyPagingItems<TopNewsEntity> = viewModel.getEverything("bitcoin").collectAsLazyPagingItems()
+    val articles: LazyPagingItems<PagingNewsEntity> =
+        viewModel.getEverything("bitcoin").collectAsLazyPagingItems()
 
     when (listType) {
         ListType.LIST, ListType.STAGGERED -> {
@@ -32,11 +34,20 @@ fun Everything(viewModel: TopNewsViewModel, listType: ListType) {
             ) {
                 items(
                     items = articles,
-                    key = {  article ->
+                    key = { article ->
                         article.url
                     }
                 ) { article ->
-                    NewsCard(item = article!!, listType = listType)
+                    article?.let {
+                        NewsCard(
+                            item = NewsUIModel(
+                                url = it.url,
+                                urlToImage = it.urlToImage,
+                                title = it.title,
+                                description = it.description,
+                            ), listType = listType
+                        )
+                    }
                 }
             }
         }
@@ -48,7 +59,17 @@ fun Everything(viewModel: TopNewsViewModel, listType: ListType) {
                     .padding(bottom = 16.dp)
             ) {
                 items(articles.itemCount) { index ->
-                    NewsCard(articles[index]!!, listType = listType)
+                    val article = articles[index]
+                    article?.let {
+                        NewsCard(
+                            item = NewsUIModel(
+                                url = it.url,
+                                urlToImage = it.urlToImage,
+                                title = it.title,
+                                description = it.description,
+                            ), listType = listType
+                        )
+                    }
                 }
             }
         }

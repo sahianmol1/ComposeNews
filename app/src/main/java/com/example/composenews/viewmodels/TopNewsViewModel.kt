@@ -35,7 +35,6 @@ class TopNewsViewModel @Inject constructor(private val repository: NewsRepositor
 
     fun getEverything(query: String) = repository.getEverything(query)
 
-
     fun getNews(isRefresh: Boolean) {
         viewModelScope.launch(exceptionHandler) {
             _isLoading.postValue(true)

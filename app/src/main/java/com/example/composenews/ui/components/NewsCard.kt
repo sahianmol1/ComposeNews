@@ -16,11 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.composenews.data.local.TopNewsEntity
+import com.example.composenews.ui.models.NewsUIModel
 import com.example.composenews.utils.ListType
 
 @Composable
-fun NewsCard(item: TopNewsEntity, listType: ListType) {
+fun NewsCard(item: NewsUIModel, listType: ListType) {
     val context = LocalContext.current
 
     val modifier = when(listType) {

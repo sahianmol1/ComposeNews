@@ -5,17 +5,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.composenews.data.local.TopNewsEntity
 
 @Dao
 interface PagingNewsDao {
 
-    @Query("SELECT * FROM top_news")
-    fun getAllNews(): PagingSource<Int, TopNewsEntity>
+    @Query("SELECT * FROM paging_news")
+    fun getAllNews(): PagingSource<Int, PagingNewsEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllNews(news: List<TopNewsEntity>)
+    suspend fun insertAllNews(news: List<PagingNewsEntity>)
 
-    @Query("DELETE FROM top_news")
+    @Query("DELETE FROM paging_news")
     suspend fun deleteAll()
 }

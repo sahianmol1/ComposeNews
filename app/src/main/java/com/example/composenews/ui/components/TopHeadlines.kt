@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.composenews.data.local.TopNewsEntity
+import com.example.composenews.ui.models.NewsUIModel
 import com.example.composenews.utils.ListType
 import com.example.composenews.viewmodels.TopNewsViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -32,7 +33,7 @@ fun TopHeadlines(
     val swipeRefreshState = rememberSwipeRefreshState(isLoading ?: false)
     SwipeRefresh(state = swipeRefreshState, onRefresh = { viewModel.getNews(true) }) {
 
-        when(listType) {
+        when (listType) {
             ListType.LIST, ListType.STAGGERED -> {
                 LazyColumn(
                     modifier = Modifier
@@ -40,7 +41,16 @@ fun TopHeadlines(
                         .padding(bottom = 16.dp)
                 ) {
                     items(articles) { article ->
-                        NewsCard(article, listType)
+                        with(article) {
+                            NewsCard(
+                                NewsUIModel(
+                                    url = url,
+                                    urlToImage = urlToImage,
+                                    title = title,
+                                    description = description,
+                                ), listType
+                            )
+                        }
                     }
                 }
             }
@@ -52,7 +62,16 @@ fun TopHeadlines(
                         .padding(bottom = 16.dp)
                 ) {
                     items(articles) { article ->
-                        NewsCard(article, listType)
+                        with(article) {
+                            NewsCard(
+                                NewsUIModel(
+                                    url = url,
+                                    urlToImage = urlToImage,
+                                    title = title,
+                                    description = description,
+                                ), listType
+                            )
+                        }
                     }
                 }
             }

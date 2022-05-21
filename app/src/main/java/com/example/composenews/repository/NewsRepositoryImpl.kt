@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import com.example.composenews.data.local.NewsDao
 import com.example.composenews.data.local.TopNewsEntity
 import com.example.composenews.data.local.remotemediator.PagingNewsDao
+import com.example.composenews.data.local.remotemediator.PagingNewsEntity
 import com.example.composenews.data.local.source.SourceDao
 import com.example.composenews.data.paging.NewsRemoteMediator
 import com.example.composenews.data.remote.api.NewsApi
@@ -49,7 +50,8 @@ class NewsRepositoryImpl @Inject constructor(
                                     url = url,
                                     urlToImage = urlToImage,
                                     title = title,
-                                    description = description ?: ""
+                                    description = description ?: "",
+                                    id = null
                                 )
                             }
 
@@ -104,8 +106,7 @@ class NewsRepositoryImpl @Inject constructor(
             return@withContext sourceDao.getAllSource() ?: emptyList()
         }
 
-    @ExperimentalPagingApi
-    override fun getEverything(query: String): Flow<PagingData<TopNewsEntity>> {
+    override fun getEverything(query: String): Flow<PagingData<PagingNewsEntity>> {
         val pagingSourceFactory = { pagingNewsDao.getAllNews() }
         return Pager(
             config = PagingConfig(PAGE_SIZE),
