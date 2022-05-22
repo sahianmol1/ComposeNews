@@ -8,71 +8,84 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.example.composenews.data.local.remotemediator.PagingNewsEntity
 import com.example.composenews.ui.models.NewsUIModel
 import com.example.composenews.utils.ListType
 import com.example.composenews.utils.SortBy
 import com.example.composenews.viewmodels.TopNewsViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
-@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalFoundationApi
 @Composable
 fun Everything(viewModel: TopNewsViewModel, listType: ListType, sortBy: SortBy) {
-    val articles: LazyPagingItems<PagingNewsEntity> =
-        viewModel.getEverything("bitcoin", sortBy).collectAsLazyPagingItems()
 
-    when (listType) {
-        ListType.LIST, ListType.STAGGERED -> {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(
-                    items = articles,
-                    key = { article ->
-                        article.url
-                    }
-                ) { article ->
-                    article?.let {
-                        NewsCard(
-                            item = NewsUIModel(
-                                url = it.url,
-                                urlToImage = it.urlToImage,
-                                title = it.title,
-                                description = it.description,
-                            ), listType = listType
-                        )
+    val searchQuery by viewModel.searchQuery
+    val isLoading = viewModel.isLoading.observeAsState().value
+
+    viewModel.searchNews(searchQuery, sortBy)
+
+    val articles = viewModel.searchedNews.collectAsLazyPagingItems()
+
+    val swipeRefreshState = rememberSwipeRefreshState(isLoading ?: false)
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = { viewModel.searchNews(searchQuery, sortBy) }) {
+        when (listType) {
+            ListType.LIST, ListType.STAGGERED -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(
+                        items = articles,
+                        key = { article ->
+                            article.url
+                        }
+                    ) { article ->
+                        article?.let {
+                            NewsCard(
+                                item = NewsUIModel(
+                                    url = it.url,
+                                    urlToImage = it.urlToImage,
+                                    title = it.title,
+                                    description = it.description,
+                                ), listType = listType
+                            )
+                        }
                     }
                 }
             }
-        }
-        ListType.GRID -> {
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 16.dp)
-            ) {
-                items(articles.itemCount) { index ->
-                    val article = articles[index]
-                    article?.let {
-                        NewsCard(
-                            item = NewsUIModel(
-                                url = it.url,
-                                urlToImage = it.urlToImage,
-                                title = it.title,
-                                description = it.description,
-                            ), listType = listType
-                        )
+            ListType.GRID -> {
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp)
+                ) {
+                    items(articles.itemCount) { index ->
+                        val article = articles[index]
+                        article?.let {
+                            NewsCard(
+                                item = NewsUIModel(
+                                    url = it.url,
+                                    urlToImage = it.urlToImage,
+                                    title = it.title,
+                                    description = it.description,
+                                ), listType = listType
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
 }
