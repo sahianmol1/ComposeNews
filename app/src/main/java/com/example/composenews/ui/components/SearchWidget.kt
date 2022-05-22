@@ -73,11 +73,8 @@ fun SearchWidget(
                             contentDescription = "CloseButton"
                         },
                     onClick = {
-                        if (text.isNotEmpty()) {
-                            onTextChange("")
-                        } else {
-                            onCloseClicked()
-                        }
+                        onCloseClicked()
+
                     }
                 ) {
                     Icon(

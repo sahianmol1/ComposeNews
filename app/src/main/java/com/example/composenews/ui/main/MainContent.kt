@@ -1,6 +1,7 @@
 package com.example.composenews.ui.main
 
 import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import com.example.composenews.utils.ListType
 import com.example.composenews.utils.SortBy
 import com.example.composenews.viewmodels.TopNewsViewModel
 
+@ExperimentalFoundationApi
 @Composable
 fun MainContent(context: Context, viewModel: TopNewsViewModel) {
     val navController = rememberNavController()
@@ -32,7 +34,7 @@ fun MainContent(context: Context, viewModel: TopNewsViewModel) {
 
     Scaffold(
         topBar = {
-            AppBar(navController = navController, context = context, {
+            AppBar(navController = navController, context = context, viewModel = viewModel, {
                 listType = it
             }) {
                 sortBy = it
