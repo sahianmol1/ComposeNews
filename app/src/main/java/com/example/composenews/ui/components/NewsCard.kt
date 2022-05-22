@@ -25,7 +25,7 @@ fun NewsCard(item: NewsUIModel, listType: ListType) {
 
     val modifier = when(listType) {
         ListType.GRID -> Modifier
-            .height( 450.dp)
+            .height(450.dp)
         else -> Modifier.fillMaxHeight()
     }
     Card(

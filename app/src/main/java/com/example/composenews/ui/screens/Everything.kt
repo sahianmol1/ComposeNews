@@ -2,11 +2,14 @@ package com.example.composenews.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,7 +40,7 @@ fun Everything(viewModel: TopNewsViewModel, listType: ListType, sortBy: SortBy) 
         state = swipeRefreshState,
         onRefresh = { viewModel.searchNews(searchQuery, sortBy) }) {
         when (listType) {
-            ListType.LIST, ListType.STAGGERED -> {
+            ListType.LIST -> {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -47,7 +50,7 @@ fun Everything(viewModel: TopNewsViewModel, listType: ListType, sortBy: SortBy) 
                     items(
                         items = articles,
                         key = { article ->
-                            article.url
+                            article.id!!
                         }
                     ) { article ->
                         article?.let {
@@ -81,6 +84,30 @@ fun Everything(viewModel: TopNewsViewModel, listType: ListType, sortBy: SortBy) 
                                     description = it.description,
                                 ), listType = listType
                             )
+                        }
+                    }
+                }
+            }
+            ListType.STAGGERED -> {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                ) {
+
+                    StaggeredVerticalGrid(maxColumnWidth = 220.dp) {
+                        articles.itemSnapshotList.forEach { article ->
+                            article?.let {
+                                with(it) {
+                                    NewsCard(
+                                        NewsUIModel(
+                                            url = url,
+                                            urlToImage = urlToImage,
+                                            title = title,
+                                            description = description,
+                                        ), listType
+                                    )
+                                }
+                            }
                         }
                     }
                 }
