@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.dp
 
 object Constants {
     const val BASE_URL = "https://newsapi.org/v2/"
-    const val API_KEY = "5bbb2705a4e247e9a7c09fc9dbd8bada"
+    const val API_KEY = "abb3046cb31348978f25d66ee52a8b55"
     const val PAGE_SIZE = 10
 
     val DefaultToolbarHeight = 60.dp
