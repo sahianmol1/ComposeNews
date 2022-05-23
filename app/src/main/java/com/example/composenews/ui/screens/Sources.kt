@@ -1,9 +1,7 @@
 package com.example.composenews.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -13,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.composenews.data.remote.models.SourceItem
 import com.example.composenews.utils.ListType
@@ -22,7 +21,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Sources(viewModel: TopNewsViewModel?, listType: ListType) {
+fun Sources(viewModel: TopNewsViewModel?, listType: ListType, toolbarHeight: Dp) {
     viewModel!!.getAllSource(false)
     val sources: List<SourceItem> = viewModel.source.observeAsState(listOf()).value
     val isLoading = viewModel.isLoading.observeAsState().value
@@ -38,6 +37,14 @@ fun Sources(viewModel: TopNewsViewModel?, listType: ListType) {
                         .padding(bottom = 16.dp)
                 ) {
                     items(sources) { source ->
+                        if (source == sources[0]) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .requiredHeight(toolbarHeight)
+                            ) {
+                            }
+                        }
                         SourceCard(source, listType)
                     }
                 }
@@ -60,6 +67,14 @@ fun Sources(viewModel: TopNewsViewModel?, listType: ListType) {
                 ) {
                     StaggeredVerticalGrid(maxColumnWidth = 220.dp) {
                         sources.forEach{ source ->
+                            if (source == sources[0]) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .requiredHeight(toolbarHeight)
+                                ) {
+                                }
+                            }
                             SourceCard(source, listType)
                         }
                     }

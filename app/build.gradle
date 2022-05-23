@@ -105,4 +105,10 @@ dependencies {
     // Paging 3
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
 
+    // Espresso
+    // Test rules and transitive dependencies:
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    // Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
 }

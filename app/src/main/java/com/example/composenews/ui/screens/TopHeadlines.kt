@@ -1,9 +1,7 @@
 package com.example.composenews.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -14,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.composenews.data.local.TopNewsEntity
@@ -28,7 +27,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun TopHeadlines(
     navController: NavController? = null,
     viewModel: TopNewsViewModel? = null,
-    listType: ListType
+    listType: ListType,
+    toolbarHeight: Dp,
 ) {
     val articles: List<TopNewsEntity> = viewModel!!.news.observeAsState(listOf()).value
     val isLoading = viewModel.isLoading.observeAsState().value
@@ -45,6 +45,14 @@ fun TopHeadlines(
                 ) {
                     items(articles) { article ->
                         with(article) {
+                            if (article == articles[0]) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .requiredHeight(toolbarHeight)
+                                ) {
+                                }
+                            }
                             NewsCard(
                                 NewsUIModel(
                                     url = url,
@@ -85,7 +93,6 @@ fun TopHeadlines(
                 ) {
                     StaggeredVerticalGrid(maxColumnWidth = 220.dp) {
                         articles.forEach { article ->
-
                             with(article) {
                                 NewsCard(
                                     NewsUIModel(
@@ -108,5 +115,5 @@ fun TopHeadlines(
 @Preview(showBackground = true)
 @Composable
 fun PreviewHeadlines() {
-    TopHeadlines(listType = ListType.LIST)
+    TopHeadlines(listType = ListType.LIST, toolbarHeight = 60.dp)
 }
