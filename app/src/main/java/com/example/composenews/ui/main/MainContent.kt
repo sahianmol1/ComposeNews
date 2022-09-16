@@ -60,8 +60,8 @@ fun MainContent(context: Context, viewModel: TopNewsViewModel, modifier: Modifie
     Scaffold(
         bottomBar = {
             AppBottomNavigation(navController = navController)
-        }
-    ) {
+        },
+    ) { paddingValues ->
         Box(
             modifier = modifier
                 .fillMaxSize()
